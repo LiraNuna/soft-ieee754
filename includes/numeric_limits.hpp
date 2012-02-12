@@ -9,7 +9,7 @@ namespace std {
 	struct numeric_limits<IEEE754<M, E, B > > {
 		static const bool is_specialized = true;
 
-		static IEEE754<M, E, B > min() { return IEEE754<M, E, B >::fomBits(+1, +1); }
+		static IEEE754<M, E, B > min() { return IEEE754<M, E, B >::fromBits(+1, +1); }
 		static IEEE754<M, E, B > max() { return IEEE754<M, E, B >::fromBits(-2, -2); }
 
 		static const int digits = M + 1;
