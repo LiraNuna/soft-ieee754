@@ -1,10 +1,10 @@
 #ifndef __IEEE754_H__
 #define __IEEE754_H__
 
-#include "smallest_unsigned.hpp"
-
 #include <cmath>
 #include <limits>
+
+#include "smallest_unsigned.hpp"
 
 template<unsigned M, unsigned E, int B >
 struct IEEE754 {
@@ -78,5 +78,7 @@ struct IEEE754 {
 			return result;
 		}
 };
+
+#include "numeric_limits.hpp"
 
 #endif
