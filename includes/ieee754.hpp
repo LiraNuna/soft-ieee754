@@ -6,7 +6,7 @@
 
 #include "smallest_unsigned.hpp"
 
-template<unsigned M, unsigned E, int B >
+template<unsigned M, unsigned E, int B = (1 << (E - 1)) - 1 >
 struct IEEE754 {
 	private:
 		enum {
