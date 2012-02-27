@@ -12,9 +12,11 @@ struct IEEE754 {
 		enum {
 			MANTISSA_MASK = (1UL << M) - 1,
 			EXPONENT_MASK = (1UL << E) - 1,
+
+			BITS = 1 + E + M,
 		};
 
-		typedef typename smallest_unsigned<1 + M + E >::type primitive;
+		typedef typename smallest_unsigned<BITS >::type primitive;
 
 		primitive mantissa : M;
 		primitive exponent : E;
