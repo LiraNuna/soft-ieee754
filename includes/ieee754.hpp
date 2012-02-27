@@ -71,12 +71,11 @@ struct IEEE754 {
 					else
 						return std::numeric_limits<T >::infinity();
 				} else {
-					T frac = mantissa / std::pow(2, M);
 					// Denormal
 					if(exponent == 0)
-						result = (0 + frac) * std::pow(2, exponent - B + 1);
+						result = (0 + mantissa / std::pow(2, M)) * std::pow(2, exponent - B + 1);
 					else
-						result = (1 + frac) * std::pow(2, exponent - B + 0);
+						result = (1 + mantissa / std::pow(2, M)) * std::pow(2, exponent - B + 0);
 				}
 			}
 
