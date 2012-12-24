@@ -36,7 +36,7 @@ class IEEE754 {
 		IEEE754(float f) {
 			// Must have at least 32bits to hold a float,
 			// but we need to expand for larger types
-			typename smallest_unsigned<(M > 32) ? M : 32 >::type i = *(uint32_t*)&f;
+			typename smallest_unsigned<(M > 32) ? M : 32 >::type i = *reinterpret_cast<uint32_t* >(&f);
 			int e = (i >> 23) & 0xFF;
 
 			sign = i >> 31;
