@@ -7,36 +7,30 @@
 #include "smallest_unsigned.hpp"
 
 template<unsigned M, unsigned E, int B = (1 << (E - 1)) - 1 >
-struct IEEE754 {
-	private:
+class IEEE754 {
+	// XXX: This actually needs to be private, however I do not know how to make
+	// The functions at std:: overrides able to access it without anything else does
+	public:
 		enum {
 			MANTISSA_MASK = (1UL << M) - 1,
 			EXPONENT_MASK = (1UL << E) - 1,
+
+			BITS = 1 + E + M,
 		};
 
-		typedef typename smallest_unsigned<1 + M + E >::type primitive;
+		typedef typename smallest_unsigned<BITS >::type primitive;
 
-		primitive mantissa : M;
-		primitive exponent : E;
-		primitive sign : 1;
+		union {
+			struct {
+				primitive mantissa : M;
+				primitive exponent : E;
+				primitive sign : 1;
+			};
+
+			primitive all;
+		};
 
 	public:
-		static IEEE754<M, E, B > fromBits(const primitive &bytes) {
-			IEEE754<M, E, B > result;
-			result.mantissa	= (bytes >> 0) & MANTISSA_MASK;
-			result.exponent	= (bytes >> M) & EXPONENT_MASK;
-			result.sign = (bytes >> (M + E)) & 1;
-			return result;
-		}
-
-		static IEEE754<M, E, B > fromBits(const primitive &mantissa, const primitive &exponent) {
-			IEEE754<M, E, B > result;
-			result.mantissa	= mantissa;
-			result.exponent	= exponent;
-			result.sign = 0;
-			return result;
-		}
-
 		IEEE754() { }
 
 		IEEE754(float f) {
@@ -69,12 +63,11 @@ struct IEEE754 {
 					else
 						return std::numeric_limits<T >::infinity();
 				} else {
-					T frac = mantissa / std::pow(2, M);
 					// Denormal
 					if(exponent == 0)
-						result = (0 + frac) * std::pow(2, exponent - B + 1);
+						result = (0 + mantissa / std::pow(2, M)) * std::pow(2.0, exponent - B + 1);
 					else
-						result = (1 + frac) * std::pow(2, exponent - B + 0);
+						result = (1 + mantissa / std::pow(2, M)) * std::pow(2.0, exponent - B + 0);
 				}
 			}
 
@@ -85,6 +78,6 @@ struct IEEE754 {
 		}
 };
 
-#include "numeric_limits.hpp"
+#include "std_overrides.hpp"
 
 #endif
