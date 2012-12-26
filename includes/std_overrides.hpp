@@ -3,6 +3,12 @@
 
 namespace std {
 	/**
+	 * The IEEE754 class with any template parameter is a floating point type.
+	 */
+	template<unsigned M, unsigned E, int B >
+	struct is_floating_point<IEEE754<M, E, B > > : public std::true_type { };
+
+	/**
 	 * Specialization of std::numeric_limits for any bit format provided.
 	 */
 	template <unsigned M, unsigned E, int B >
