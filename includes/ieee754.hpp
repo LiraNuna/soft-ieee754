@@ -137,9 +137,9 @@ class IEEE754 {
 				} else {
 					// Denormal
 					if(exponent == 0)
-						result = (0 + mantissa / std::pow(2.0, M)) * std::pow(2.0, exponent - B + 1);
+						result = (0 + mantissa / std::pow(2.0, M)) * (1 << (exponent - B + 1));
 					else
-						result = (1 + mantissa / std::pow(2.0, M)) * std::pow(2.0, exponent - B + 0);
+						result = (1 + mantissa / std::pow(2.0, M)) * (1 << (exponent - B + 0));
 				}
 			}
 
