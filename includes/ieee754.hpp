@@ -24,15 +24,9 @@ class IEEE754 {
 
 		typedef typename smallest_unsigned<BITS >::type primitive;
 
-		union {
-			struct {
-				primitive mantissa : M;
-				primitive exponent : E;
-				primitive sign : 1;
-			};
-
-			primitive all;
-		};
+		primitive mantissa : M;
+		primitive exponent : E;
+		primitive sign : 1;
 
 	private:
 		/**
