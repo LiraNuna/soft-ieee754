@@ -16,8 +16,8 @@ namespace std {
 		public:
 			static constexpr bool is_specialized = true;
 
-			static IEEE754<M, E, B > min()			{ return from_components(+1, +1); }
-			static IEEE754<M, E, B > max()			{ return from_components(-2, -2); }
+			static IEEE754<M, E, B > min()			{ return from_components(+1,  0); }
+			static IEEE754<M, E, B > max()			{ return from_components(-2, -1); }
 
 			static constexpr int digits = M + 1;
 			static constexpr int digits10 = M * M_LOG10E / M_LOG2E;
