@@ -30,19 +30,27 @@ class IEEE754 {
 
 	private:
 		/**
-		 * Adjust previously calculated mantissa to new mantissa
+		 * Shift that allows negative values
 		 */
-		template <typename T >
-		primitive adjusted_shift(T value, int shift_amount) {
-			shift_amount -= M;
-
+		template <
+			typename T,
+			typename RT = typename std::conditional<(sizeof(T) > sizeof(primitive)), T, primitive >::type
+		>
+		static RT shift(T value, int shift_amount) {
 			if(shift_amount < 0)
-				return value << -shift_amount;
-
+				return value >> -shift_amount;
 			if(shift_amount > 0)
-				return value >> shift_amount;
+				return value << shift_amount;
 
 			return value;
+		}
+
+		/**
+		 * Computes the real value of the mantissa.
+		 * This adds the implicit 1.xxxx to the mantissa when needed
+		 */
+		primitive real_mantissa() const {
+			return exponent ? mantissa | (1 << M) : mantissa;
 		}
 
 		/**
@@ -54,7 +62,15 @@ class IEEE754 {
 			int log2 = std::log2(unsigned_value);
 
 			exponent = unsigned_value ? B + log2 : 0;
-			mantissa = adjusted_shift(unsigned_value, log2);
+			mantissa = shift(unsigned_value, M - log2);
+		}
+
+		/**
+		 * Retrieve the value of this float as an unsigned value
+		 */
+		template <typename T >
+		T to_unsigned() const {
+			return shift<T >(real_mantissa(), exponent - B - M);
 		}
 
 	public:
@@ -121,34 +137,55 @@ class IEEE754 {
 		}
 
 		/**
-		 * Convert floating point to any arithmetic value.
+		 * Convert to another IEEE floating point
+		 */
+		template <unsigned OM, unsigned OE, int OB >
+		operator IEEE754<OM, OE, OB >() const {
+			return *this;
+		}
+
+		/**
+		 * Convert to another floating point value
 		 */
 		template <
 			typename T,
-			typename = typename std::enable_if<std::is_arithmetic<T >::value, T >::type
+			typename = typename std::enable_if<std::is_floating_point<T >::value, T >::type
 		>
 		operator T() const {
-			T result = 0;
-
-			if(mantissa || exponent) {
-				if(exponent == EXPONENT_MASK) {
-					if(mantissa == 0)
-						return std::numeric_limits<T >::infinity();
-
-					return std::numeric_limits<T >::quiet_NaN();
-				} else {
-					// Denormal
-					if(exponent == 0)
-						result = (0 + mantissa / std::pow(2.0, M)) * (1 << (exponent - B + 1));
-					else
-						result = (1 + mantissa / std::pow(2.0, M)) * (1 << (exponent - B + 0));
-				}
-			}
-
+			T result = std::ldexp(real_mantissa() / T(1 << M), exponent - B);
 			if(sign)
 				result = -result;
 
 			return result;
+		}
+
+		/**
+		 * Convert to a signed integer
+		 */
+		template <
+			typename T,
+			typename = typename std::enable_if<!std::is_floating_point<T >::value, T >::type,
+			typename = typename std::enable_if< std::is_signed<T >::value, T >::type
+		>
+		operator T() const {
+			T result = to_unsigned<T >();
+			if(sign)
+				result = -result;
+
+			return result;
+		}
+
+		/**
+		 * Convert to an unsigned integer
+		 */
+		template <
+			typename T,
+			typename = typename std::enable_if<!std::is_floating_point<T >::value, T >::type,
+			typename = typename std::enable_if<!std::is_signed<T >::value, T >::type,
+			typename = typename std::enable_if< std::is_unsigned<T >::value, T >::type
+		>
+		operator T() const {
+			return to_unsigned<T >();
 		}
 };
 
