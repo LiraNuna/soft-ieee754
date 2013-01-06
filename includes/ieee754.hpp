@@ -73,8 +73,9 @@ class IEEE754 {
 		 */
 		template <unsigned OM, unsigned OE, int OB >
 		IEEE754(const IEEE754<OM, OE, OB > &other_ieee754) {
-			exponent = other_ieee754.exponent - OB + B;
-			mantissa = adjusted_shift(other_ieee754.mantissa, OM);
+			sign = other_ieee754.sign;
+			exponent = other_ieee754.exponent ? other_ieee754.exponent - OB + B : 0;
+			mantissa = shift(other_ieee754.mantissa, M - OM);
 		}
 
 		/**
