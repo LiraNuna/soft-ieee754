@@ -88,8 +88,9 @@ class IEEE754 {
 		IEEE754(T floating_point) {
 			int exp = 0;
 
+			sign = std::signbit(floating_point);
 			mantissa = (std::frexp(floating_point, &exp) + 0.5) * (1 << (M + 1));
-			exponent = exp + B - 1;
+			exponent = floating_point ? exp + B - 1 : 0;
 		}
 
 		/**
