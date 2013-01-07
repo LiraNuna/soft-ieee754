@@ -102,11 +102,16 @@ class IEEE754 {
 			typename = typename std::enable_if<std::is_floating_point<T >::value, T >::type
 		>
 		IEEE754(T floating_point) {
-			int exp = 0;
-
 			sign = std::signbit(floating_point);
-			mantissa = (std::frexp(floating_point, &exp) + 0.5) * (1 << (M + 1));
-			exponent = floating_point ? exp + B - 1 : 0;
+
+			if(std::isnormal(floating_point)) {
+				int exp = 0;
+				mantissa = (std::frexp(floating_point, &exp) + 0.5) * (1 << (M + 1));
+				exponent = floating_point ? exp + B - 1 : 0;
+			} else {
+				exponent = EXPONENT_MASK;
+				mantissa = std::isnan(floating_point);
+			}
 		}
 
 		/**
@@ -152,7 +157,16 @@ class IEEE754 {
 			typename = typename std::enable_if<std::is_floating_point<T >::value, T >::type
 		>
 		operator T() const {
-			T result = std::ldexp(real_mantissa() / T(1 << M), exponent - B);
+			T result;
+			if(exponent != EXPONENT_MASK) {
+				result = std::ldexp(real_mantissa() / T(1 << M), exponent - B);
+			} else {
+				if(mantissa)
+					result = std::numeric_limits<T >::quiet_NaN();
+				else
+					result = std::numeric_limits<T >::infinity();
+			}
+
 			if(sign)
 				result = -result;
 
