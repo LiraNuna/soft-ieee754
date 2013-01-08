@@ -142,14 +142,6 @@ class IEEE754 {
 		}
 
 		/**
-		 * Convert to another IEEE floating point
-		 */
-		template <unsigned OM, unsigned OE, int OB >
-		operator IEEE754<OM, OE, OB >() const {
-			return *this;
-		}
-
-		/**
 		 * Convert to another floating point value
 		 */
 		template <
