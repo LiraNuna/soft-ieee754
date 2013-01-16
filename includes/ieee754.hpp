@@ -58,10 +58,10 @@ class IEEE754 {
 		 * Sign is left unchanged.
 		 */
 		template <typename T >
-		void from_unsigned(T unsigned_value) {
+		void from_unsigned(T unsigned_value, int radix_point = 0) {
 			int log2 = std::log2(unsigned_value);
 
-			exponent = unsigned_value ? B + log2 : 0;
+			exponent = unsigned_value ? log2 + radix_point + B : 0;
 			mantissa = shift(unsigned_value, M - log2);
 		}
 
@@ -69,8 +69,8 @@ class IEEE754 {
 		 * Retrieve the value of this float as an unsigned value
 		 */
 		template <typename T >
-		T to_unsigned() const {
-			return shift<T >(real_mantissa(), exponent - B - M);
+		T to_unsigned(int radix_point = 0) const {
+			return shift<T >(real_mantissa(), exponent - radix_point - B - M);
 		}
 
 	public:
