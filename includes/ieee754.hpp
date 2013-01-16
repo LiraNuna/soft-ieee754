@@ -107,10 +107,10 @@ class IEEE754 {
 			if(std::isnormal(floating_point)) {
 				int exp = 0;
 				mantissa = (std::frexp(floating_point, &exp) + 0.5) * (1 << (M + 1));
-				exponent = floating_point ? exp + B - 1 : 0;
+				exponent = exp + B - 1;
 			} else {
-				exponent = EXPONENT_MASK;
 				mantissa = std::isnan(floating_point);
+				exponent = floating_point == 0 ? 0 : EXPONENT_MASK;
 			}
 		}
 
