@@ -124,7 +124,7 @@ namespace std {
 	template <unsigned M, unsigned E, int B >
 	bool isnormal(const IEEE754<M, E, B > &arg) {
 		return (arg.exponent != 0)
-			|| (arg.exponent != IEEE754<M, E, B >::EXPONENT_MASK);
+			&& (arg.exponent != IEEE754<M, E, B >::EXPONENT_MASK);
 	}
 
 	/*
