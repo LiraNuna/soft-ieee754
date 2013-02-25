@@ -162,10 +162,7 @@ class IEEE754 {
 					result = std::numeric_limits<T >::infinity();
 			}
 
-			if(sign)
-				result = -result;
-
-			return result;
+			return std::copysign(result, -sign);
 		}
 
 		/**
@@ -177,11 +174,7 @@ class IEEE754 {
 			typename = typename std::enable_if< std::is_signed<T >::value, T >::type
 		>
 		operator T() const {
-			T result = to_unsigned<T >();
-			if(sign)
-				result = -result;
-
-			return result;
+			return (to_unsigned<T >() ^ -sign) + sign;
 		}
 
 		/**
