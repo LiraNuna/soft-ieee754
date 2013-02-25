@@ -3,9 +3,8 @@
 
 #include <cmath>
 #include <limits>
+#include <algorithm>
 #include <type_traits>
-
-#include <iostream> // XXX: Not including this causes GCC to freak out about template substitutions.
 
 #include "smallest_unsigned.hpp"
 
@@ -124,7 +123,7 @@ class IEEE754 {
 		>
 		IEEE754(T signed_integral) {
 			sign = (signed_integral < 0);
-			from_unsigned(std::abs(signed_integral));
+			from_unsigned<T >(std::abs(signed_integral));
 		}
 
 		/**
