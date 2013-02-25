@@ -73,6 +73,8 @@ class IEEE754 {
 		}
 
 	public:
+		// -------------------------- Constructors -------------------------- //
+
 		/**
 		 * Default constructor, undefined value.
 		 */
@@ -139,6 +141,8 @@ class IEEE754 {
 			sign = 0;
 			from_unsigned(unsigned_integral);
 		}
+
+		// ------------------------- Cast operators ------------------------- //
 
 		/**
 		 * Convert to another floating point value
