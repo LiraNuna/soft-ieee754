@@ -61,8 +61,13 @@ class IEEE754 {
 		void from_unsigned(T unsigned_value, int radix_point = 0) {
 			int log2 = std::log2(unsigned_value);
 
-			exponent = unsigned_value ? log2 + radix_point + B : 0;
-			mantissa = shift(unsigned_value, M - log2);
+			if(unsigned_value > (1 << EXPONENT_MASK)) {
+				exponent = EXPONENT_MASK;
+				mantissa = 0;
+			} else {
+				exponent = unsigned_value ? log2 + radix_point + B : 0;
+				mantissa = shift(unsigned_value, M - log2);
+			}
 		}
 
 		/**
