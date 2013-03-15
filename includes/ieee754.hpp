@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <type_traits>
 
+#include "std_overrides.hpp"
 #include "smallest_unsigned.hpp"
 
 template<unsigned M, unsigned E, int B = (1 << (E - 1)) - 1 >

@@ -1,6 +1,9 @@
 #ifndef __IEEE754_STD_OVERRIDES_H__
 #define __IEEE754_STD_OVERRIDES_H__
 
+template<unsigned M, unsigned E, int B >
+class IEEE754;
+
 namespace std {
 	/**
 	 * The IEEE754 class with any template parameter is a floating point type.
