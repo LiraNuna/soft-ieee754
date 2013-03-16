@@ -61,7 +61,7 @@ class IEEE754 {
 		void from_unsigned(T unsigned_value, int radix_point = 0) {
 			int log2 = std::log2(unsigned_value);
 
-			if(unsigned_value > (1 << EXPONENT_MASK)) {
+			if(unsigned_value > ((1 << (M + 1)) - 1) << E) {
 				exponent = EXPONENT_MASK;
 				mantissa = 0;
 			} else {
