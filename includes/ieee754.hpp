@@ -78,6 +78,14 @@ class IEEE754 {
 			return shift<T >(real_mantissa(), exponent - radix_point - B - M);
 		}
 
+		/**
+		 * Retrieve the value of this float as a signed value
+		 */
+		template <typename T >
+		T to_signed(int radix_point = 0) const {
+			return (to_unsigned<T >(radix_point) ^ -sign) + sign;
+		}
+
 	public:
 		// -------------------------- Constructors -------------------------- //
 
@@ -180,7 +188,7 @@ class IEEE754 {
 			typename = typename std::enable_if< std::is_signed<T >::value, T >::type
 		>
 		operator T() const {
-			return (to_unsigned<T >() ^ -sign) + sign;
+			return to_signed<T >();
 		}
 
 		/**
