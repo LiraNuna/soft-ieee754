@@ -197,6 +197,5 @@ class IEEE754 {
 		}
 };
 
-#include "std_overrides.hpp"
 
 #endif
