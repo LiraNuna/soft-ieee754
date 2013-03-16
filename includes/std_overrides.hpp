@@ -130,6 +130,17 @@ namespace std {
 			&& (arg.exponent != IEEE754<M, E, B >::EXPONENT_MASK);
 	}
 
+	/**
+	 * Checks if two floating-point values are unordered
+	 */
+	template <unsigned M, unsigned E, int B >
+	bool isunordered(const IEEE754<M, E, B > &arg1, const IEEE754<M, E, B > &arg2) {
+		return isnan(arg1)
+			|| isnan(arg2);
+	}
+
+	// ------------------------- Sign manipulation -------------------------- //
+
 	/*
 	 * Checks if the given number is negative
 	 */
@@ -139,12 +150,23 @@ namespace std {
 	}
 
 	/**
-	 * Checks if two floating-point values are unordered
+	 * Computes the absolute value of a floating point value
 	 */
 	template <unsigned M, unsigned E, int B >
-	bool isunordered(const IEEE754<M, E, B > &arg1, const IEEE754<M, E, B > &arg2) {
-		return isnan(arg1)
-			|| isnan(arg2);
+	IEEE754<M, E, B > abs(const IEEE754<M, E, B > &arg) {
+		IEEE754<M, E, B > result = arg;
+		result.sign = 0;
+		return result;
+	}
+
+	/**
+	 * Composes a floating point value with the magnitude of x and the sign of y
+	 */
+	template <unsigned M, unsigned E, int B >
+	IEEE754<M, E, B > copysign(const IEEE754<M, E, B > &x, const IEEE754<M, E, B > &y) {
+		IEEE754<M, E, B > result = x;
+		result.sign = y.sign;
+		return result;
 	}
 }
 
