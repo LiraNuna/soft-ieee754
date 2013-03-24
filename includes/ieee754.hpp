@@ -30,6 +30,31 @@ class IEEE754 {
 
 	private:
 		/**
+		 * Build a float from components
+		 */
+		inline static IEEE754 from_components(primitive sign, primitive exponent, primitive mantissa) {
+			IEEE754 result;
+			result.sign = sign;
+			result.exponent	= exponent;
+			result.mantissa	= mantissa;
+			return result;
+		}
+
+		/**
+		 * Returns nan with optional sign and mantissa
+		 */
+		inline static IEEE754 nan(primitive sign = 0, primitive mantissa = 1) {
+			return from_components(sign, EXPONENT_MASK, mantissa);
+		}
+
+		/**
+		 * Returns Infinity
+		 */
+		inline static IEEE754 inf(primitive sign = 0) {
+			return from_components(sign, EXPONENT_MASK, 0);
+		}
+
+		/**
 		 * Shift that allows negative values
 		 */
 		template <
