@@ -246,7 +246,25 @@ class IEEE754 {
 		operator T() const {
 			return to_unsigned<T >();
 		}
-};
 
+		// --------------------------- Arithmetic --------------------------- //
+
+		friend IEEE754 operator * (const IEEE754 &lhs, const IEEE754 &rhs) {
+			if(std::isunordered(lhs, rhs))
+				return nan();
+
+			primitive sign = lhs.sign ^ rhs.sign;
+			primitive exponent = lhs.exponent + rhs.exponent - B;
+			primitive product  = (lhs.real_mantissa() * rhs.real_mantissa()) >> M;
+
+			primitive overflow = (product >> M) > 1;
+
+			exponent += overflow;
+			if(exponent >= EXPONENT_MASK)
+				return inf(sign);
+
+			return from_components(sign, exponent, product >> overflow);
+		}
+};
 
 #endif
