@@ -71,6 +71,17 @@ class IEEE754 {
 		}
 
 		/**
+		 * Fills up sign, exponent and mantissa from an unsigned value.
+		 */
+		template <typename T >
+		void from_signed(T signed_value, int radix_point = 0) {
+			typename std::make_signed<T >::type forced_signed = signed_value;
+
+			sign = (forced_signed < 0);
+			from_unsigned<T >(std::abs(forced_signed), radix_point);
+		}
+
+		/**
 		 * Retrieve the value of this float as an unsigned value
 		 */
 		template <typename T >
@@ -146,8 +157,7 @@ class IEEE754 {
 			typename = typename std::enable_if< std::is_signed<T >::value, T >::type
 		>
 		IEEE754(T signed_integral) {
-			sign = (signed_integral < 0);
-			from_unsigned<T >(std::abs(signed_integral));
+			from_signed(signed_integral);
 		}
 
 		/**
