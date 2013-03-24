@@ -157,7 +157,7 @@ class IEEE754 {
 
 			if(std::isnormal(floating_point)) {
 				int exp = 0;
-				int man = (std::frexp(floating_point, &exp) + 0.5) * (1 << (M + 1));
+				int man = std::abs(std::frexp(floating_point, &exp) + 0.5) * (1 << (M + 1));
 
 				exp += B - 1;
 				if(exp < EXPONENT_MASK) {
