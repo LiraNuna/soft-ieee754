@@ -23,6 +23,7 @@ class IEEE754 {
 		};
 
 		typedef typename smallest_unsigned<BITS >::type primitive;
+		typedef typename std::make_signed<primitive >::type signed_primitive;
 
 		primitive mantissa : M;
 		primitive exponent : E;
@@ -37,6 +38,13 @@ class IEEE754 {
 			result.sign = sign;
 			result.exponent	= exponent;
 			result.mantissa	= mantissa;
+			return result;
+		}
+
+		template<typename T >
+		inline static IEEE754 renormalize(T unnormalized, int radix_point) {
+			IEEE754 result;
+			result.from_signed(unnormalized, radix_point);
 			return result;
 		}
 
@@ -248,6 +256,26 @@ class IEEE754 {
 		}
 
 		// --------------------------- Arithmetic --------------------------- //
+
+		friend IEEE754 operator + (const IEEE754 &lhs, const IEEE754 &rhs) {
+			if(std::isunordered(lhs, rhs))
+				return nan();
+
+			int exp = std::min(lhs.exponent - B, rhs.exponent - B) - M;
+			return renormalize(
+				lhs.to_signed<signed_primitive >(exp) +
+				rhs.to_signed<signed_primitive >(exp), exp);
+		}
+
+		friend IEEE754 operator - (const IEEE754 &lhs, const IEEE754 &rhs) {
+			if(std::isunordered(lhs, rhs))
+				return nan();
+
+			int exp = std::min(lhs.exponent - B, rhs.exponent - B) - M;
+			return renormalize(
+				lhs.to_signed<signed_primitive >(exp) -
+				rhs.to_signed<signed_primitive >(exp), exp);
+		}
 
 		friend IEEE754 operator * (const IEEE754 &lhs, const IEEE754 &rhs) {
 			if(std::isunordered(lhs, rhs))
