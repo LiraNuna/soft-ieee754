@@ -259,6 +259,10 @@ class IEEE754 {
 
 		// Unary
 
+		friend IEEE754 operator + (const IEEE754 &value) {
+			return value;
+		}
+
 		friend IEEE754 operator - (const IEEE754 &value) {
 			return from_components(
 				value.sign ^ 1,
