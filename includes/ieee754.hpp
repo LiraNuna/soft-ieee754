@@ -293,6 +293,21 @@ class IEEE754 {
 
 			return from_components(sign, exponent, product >> overflow);
 		}
-};
+
+		friend IEEE754 operator / (const IEEE754 &lhs, const IEEE754 &rhs) {
+			if(std::isunordered(lhs, rhs))
+				return nan();
+
+			primitive sign = lhs.sign ^ rhs.sign;
+			primitive exponent = lhs.exponent - rhs.exponent + B;
+			primitive quotient = (lhs.real_mantissa() << M) / rhs.real_mantissa();
+
+			primitive underflow = (quotient >> M) < 1;
+			exponent -= underflow;
+			if(exponent >= EXPONENT_MASK)
+				return nan(sign);
+
+			return from_components(sign, exponent, quotient << underflow);
+		}};
 
 #endif
