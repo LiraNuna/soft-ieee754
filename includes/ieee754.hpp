@@ -257,6 +257,16 @@ class IEEE754 {
 
 		// --------------------------- Arithmetic --------------------------- //
 
+		// Unary
+
+		friend IEEE754 operator - (const IEEE754 &value) {
+			return from_components(
+				value.sign ^ 1,
+				value.exponent, value.mantissa);
+		}
+
+		// Binary
+
 		friend IEEE754 operator + (const IEEE754 &lhs, const IEEE754 &rhs) {
 			if(std::isunordered(lhs, rhs))
 				return nan();
@@ -265,12 +275,6 @@ class IEEE754 {
 			return renormalize(
 				lhs.to_signed<signed_primitive >(exp) +
 				rhs.to_signed<signed_primitive >(exp), exp);
-		}
-
-		friend IEEE754 operator - (const IEEE754 &value) {
-			return from_components(
-				value.sign ^ 1,
-				value.exponent, value.mantissa);
 		}
 
 		friend IEEE754 operator - (const IEEE754 &lhs, const IEEE754 &rhs) {
