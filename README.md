@@ -16,4 +16,12 @@ useful when compactness is needed.
 
 ## Status
 
-Currently the library is in a WIP state. 
+Currently the library is capable of supporting almost correct arithmetic
+operations and is binary compatible with other floating point implementations of
+same requested size (for example, binary32).
+
+### Known bugs / missing features:
+ * Comparison operators are not implemented yet
+ * Algebraic functions are not implemented yet
+ * Floating points larger than 64bit cannot be represented
+ * Arithmetic operations with infinity results into incorrect results
