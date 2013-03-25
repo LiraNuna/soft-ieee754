@@ -323,6 +323,24 @@ class IEEE754 {
 
 			return from_components(sign, exponent, quotient << underflow);
 		}
+
+		// Placement
+
+		IEEE754& operator += (const IEEE754 &value) {
+			return *this = *this + value;
+		}
+
+		IEEE754& operator -= (const IEEE754 &value) {
+			return *this = *this - value;
+		}
+
+		IEEE754& operator *= (const IEEE754 &value) {
+			return *this = *this * value;
+		}
+
+		IEEE754& operator /= (const IEEE754 &value) {
+			return *this = *this / value;
+		}
 };
 
 #endif
