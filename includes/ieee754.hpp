@@ -341,6 +341,30 @@ class IEEE754 {
 		IEEE754& operator /= (const IEEE754 &value) {
 			return *this = *this / value;
 		}
+
+		// --------------------------- Comparison --------------------------- //
+
+		friend bool operator == (const IEEE754 &lhs, const IEEE754 &rhs) {
+			if(std::isunordered(lhs, rhs))
+				return false;
+
+			if(lhs.exponent == 0 && lhs.mantissa == 0
+			&& rhs.exponent == 0 && rhs.mantissa == 0)
+				return true;
+
+			return (primitive&)lhs == (primitive&)rhs;
+		}
+
+		friend bool operator != (const IEEE754 &lhs, const IEEE754 &rhs) {
+			if(std::isunordered(lhs, rhs))
+				return false;
+
+			if(lhs.exponent == 0 && lhs.mantissa == 0
+			&& rhs.exponent == 0 && rhs.mantissa == 0)
+				return false;
+
+			return (primitive&)lhs != (primitive&)rhs;
+		}
 };
 
 #endif
