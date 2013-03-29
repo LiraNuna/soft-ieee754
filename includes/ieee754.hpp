@@ -359,7 +359,7 @@ class IEEE754 {
 
 		friend bool operator != (const IEEE754 &lhs, const IEEE754 &rhs) {
 			if(std::isunordered(lhs, rhs))
-				return false;
+				return true;
 
 			if(lhs.exponent == 0 && lhs.mantissa == 0
 			&& rhs.exponent == 0 && rhs.mantissa == 0)
