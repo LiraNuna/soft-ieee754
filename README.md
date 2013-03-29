@@ -21,7 +21,7 @@ operations and is binary compatible with other floating point implementations of
 same requested size (for example, binary32).
 
 ### Known bugs / missing features:
- * Comparison operators are not implemented yet
  * Algebraic functions are not implemented yet
  * Floating points larger than 64bit cannot be represented
  * Arithmetic operations with infinity results into incorrect results
+ * Casting of ±NaN or ±Infinity into a signed or unsigned is incorrect
