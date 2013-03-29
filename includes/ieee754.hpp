@@ -344,6 +344,8 @@ class IEEE754 {
 
 		// --------------------------- Comparison --------------------------- //
 
+		// Equality
+
 		friend bool operator == (const IEEE754 &lhs, const IEEE754 &rhs) {
 			if(std::isunordered(lhs, rhs))
 				return false;
@@ -364,6 +366,44 @@ class IEEE754 {
 				return false;
 
 			return (primitive&)lhs != (primitive&)rhs;
+		}
+
+		// Relative comparison
+
+		friend bool operator < (const IEEE754 &lhs, const IEEE754 &rhs) {
+			if(std::isunordered(lhs, rhs))
+				return false;
+
+			if(lhs.exponent - B < rhs.exponent - B)
+				return !rhs.sign;
+
+			if(lhs.mantissa < rhs.mantissa)
+				return !rhs.sign;
+
+			return lhs.sign && !rhs.sign;
+		}
+
+		friend bool operator > (const IEEE754 &lhs, const IEEE754 &rhs) {
+			if(std::isunordered(lhs, rhs))
+				return false;
+
+			if(lhs.exponent - B > rhs.exponent - B)
+				return !lhs.sign;
+
+			if(lhs.mantissa > rhs.mantissa)
+				return !lhs.sign;
+
+			return !lhs.sign && rhs.sign;
+		}
+
+		friend bool operator <= (const IEEE754 &lhs, const IEEE754 &rhs) {
+			return (lhs < rhs)
+				|| (rhs == lhs);
+		}
+
+		friend bool operator >= (const IEEE754 &lhs, const IEEE754 &rhs) {
+			return (lhs > rhs)
+				|| (rhs == lhs);
 		}
 };
 
