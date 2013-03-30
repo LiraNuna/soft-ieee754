@@ -161,19 +161,24 @@ class IEEE754 {
 			typename = typename std::enable_if<std::is_floating_point<T >::value, T >::type
 		>
 		IEEE754(T floating_point) {
+			const int max_exponent = std::numeric_limits<IEEE754 >::max_exponent;
+			const int min_exponent = std::numeric_limits<IEEE754 >::min_exponent;
+
 			sign = std::signbit(floating_point);
 
 			if(std::isnormal(floating_point)) {
 				int exp = 0;
-				int man = std::abs(std::frexp(floating_point, &exp) + 0.5) * (1 << (M + 1));
+				primitive man = std::ldexp(std::frexp(floating_point, &exp), M + 1);
 
-				exp += B - 1;
-				if(exp < EXPONENT_MASK) {
-					exponent = exp;
-					mantissa = man;
-				} else {
+				if(exp > max_exponent) {
 					exponent = EXPONENT_MASK;
 					mantissa = 0;
+				} else if(exp < min_exponent) {
+					exponent = 0;
+					mantissa = shift(man, exp - min_exponent + 1);
+				} else {
+					exponent = exp + B - 1;
+					mantissa = man;
 				}
 			} else {
 				exponent = floating_point == T() ? 0 : EXPONENT_MASK;
