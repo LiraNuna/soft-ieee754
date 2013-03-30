@@ -168,6 +168,18 @@ namespace std {
 		result.sign = y.sign;
 		return result;
 	}
+
+	// ----------------------------- Components ----------------------------- //
+
+	/**
+	 *  Returns the resulting floating point value from multiplying
+	 *  the significand by 2 raised to the power of the exponent.
+	 */
+	template <unsigned M, unsigned E, int B >
+	IEEE754<M, E, B > ldexp(const IEEE754<M, E, B > &x, int exp) {
+		// XXX: Conversion of double to IEEE754 instance
+		return x * std::pow(2.0, exp);
+	}
 }
 
 #endif
