@@ -180,6 +180,36 @@ namespace std {
 		// XXX: Conversion of double to IEEE754 instance
 		return x * std::pow(2.0, exp);
 	}
+
+	/**
+	 * Breaks the floating point number x into its binary significand
+	 * and an integral exponent for 2
+	 */
+	template <unsigned M, unsigned E, int B >
+	IEEE754<M, E, B > frexp(const IEEE754<M, E, B > &x, int* exp) {
+		IEEE754<M, E, B > result = x;
+
+		switch(std::fpclassify(x)) {
+			case FP_NAN:
+			case FP_ZERO:
+			case FP_INFINITE:
+					*exp = 0;
+				break;
+			case FP_SUBNORMAL: {
+					int log2 = std::log2(x.mantissa);
+
+					*exp = log2 - B - 2;
+					result.exponent = B - 1;
+					result.mantissa = x.mantissa << (M - log2);
+				} break;
+			case FP_NORMAL:
+					*exp = x.exponent - B + 1;
+					result.exponent = B - 1;
+				break;
+		}
+
+		return result;
+	}
 }
 
 #endif
