@@ -24,4 +24,5 @@ same requested size (for example, binary32).
  * Algebraic functions are not implemented yet
  * Floating points larger than 64bit cannot be represented
  * Arithmetic operations with infinity results into incorrect results
+ * Arithmetic operations with denormals results into incorrect results
  * Casting of ±NaN or ±Infinity into a signed or unsigned is incorrect
