@@ -108,10 +108,13 @@ class IEEE754 {
 		 */
 		template <typename T >
 		void from_signed(T signed_value, int radix_point = 0) {
-			typename std::make_signed<T >::type forced_signed = signed_value;
+			typedef typename std::make_signed<T >::type signed_T;
+			typedef typename std::make_unsigned<T >::type unsigned_T;
+
+			signed_T forced_signed = signed_value;
 
 			sign = (forced_signed < 0);
-			from_unsigned<T >(std::abs(forced_signed), radix_point);
+			from_unsigned<unsigned_T >(std::abs(forced_signed), radix_point);
 		}
 
 		/**
