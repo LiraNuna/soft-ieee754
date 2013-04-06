@@ -95,14 +95,19 @@ class IEEE754 {
 		 */
 		template <typename T >
 		void from_unsigned(T unsigned_value, int radix_point = 0) {
-			int log2 = std::log2(unsigned_value);
-
 			if(unsigned_value > shift<T >((1 << (M + 1)) - 1, E - radix_point)) {
 				exponent = EXPONENT_MASK;
 				mantissa = 0;
 			} else {
-				exponent = unsigned_value ? log2 + radix_point + B : 0;
-				mantissa = shift(unsigned_value, M - log2);
+				int log2 = std::log2(unsigned_value);
+
+				if(radix_point + log2 + 1 < MIN_EXPONENT) {
+					exponent = 0;
+					mantissa = shift(unsigned_value, M - (MIN_EXPONENT - radix_point - 1));
+				} else {
+					exponent = unsigned_value ? log2 + radix_point + B : 0;
+					mantissa = shift(unsigned_value, M - log2);
+				}
 			}
 		}
 
