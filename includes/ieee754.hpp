@@ -19,6 +19,9 @@ class IEEE754 {
 			MANTISSA_MASK = (1UL << M) - 1,
 			EXPONENT_MASK = (1UL << E) - 1,
 
+			MIN_EXPONENT = -B + 2,
+			MAX_EXPONENT =  B + 1,
+
 			BITS = 1 + E + M,
 		};
 
@@ -164,21 +167,18 @@ class IEEE754 {
 			typename = typename std::enable_if<std::is_floating_point<T >::value, T >::type
 		>
 		IEEE754(T floating_point) {
-			const int max_exponent = std::numeric_limits<IEEE754 >::max_exponent;
-			const int min_exponent = std::numeric_limits<IEEE754 >::min_exponent;
-
 			sign = std::signbit(floating_point);
 
 			if(std::isnormal(floating_point)) {
 				int exp = 0;
 				primitive man = std::ldexp(std::frexp(floating_point, &exp), M + 1);
 
-				if(exp > max_exponent) {
+				if(exp > MAX_EXPONENT) {
 					exponent = EXPONENT_MASK;
 					mantissa = 0;
-				} else if(exp < min_exponent) {
+				} else if(exp < MIN_EXPONENT) {
 					exponent = 0;
-					mantissa = shift(man, exp - min_exponent + 1);
+					mantissa = shift(man, exp - MIN_EXPONENT + 1);
 				} else {
 					exponent = exp + B - 1;
 					mantissa = man;
