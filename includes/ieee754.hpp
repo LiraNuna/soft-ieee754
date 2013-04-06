@@ -86,7 +86,7 @@ class IEEE754 {
 		 * This adds the implicit 1.xxxx to the mantissa when needed
 		 */
 		primitive real_mantissa() const {
-			return exponent ? mantissa | (1 << M) : mantissa;
+			return exponent ? mantissa | (1 << M) : (mantissa << 1);
 		}
 
 		/**
