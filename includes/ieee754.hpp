@@ -324,6 +324,8 @@ class IEEE754 {
 		friend IEEE754 operator / (const IEEE754 &lhs, const IEEE754 &rhs) {
 			if(std::isunordered(lhs, rhs))
 				return nan();
+			if(rhs == 0)
+				return inf(lhs.sign ^ rhs.sign);
 
 			primitive sign = lhs.sign ^ rhs.sign;
 			primitive exponent = lhs.exponent - rhs.exponent + B;
