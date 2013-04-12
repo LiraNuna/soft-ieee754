@@ -44,10 +44,24 @@ class IEEE754 {
 			return result;
 		}
 
+		/**
+		 * Renormalizes a signed fixed point into a float
+		 */
 		template<typename T >
 		inline static IEEE754 renormalize(T unnormalized, int radix_point) {
 			IEEE754 result;
 			result.from_signed(unnormalized, radix_point);
+			return result;
+		}
+
+		/**
+		 * Renormalizes an unsigned fixed point into a float
+		 */
+		template<typename T >
+		inline static IEEE754 renormalize(T unnormalized, int radix_point, int sign) {
+			IEEE754 result;
+			result.sign = sign;
+			result.from_unsigned(unnormalized, radix_point);
 			return result;
 		}
 
@@ -308,17 +322,10 @@ class IEEE754 {
 			if(std::isunordered(lhs, rhs))
 				return nan();
 
-			primitive sign = lhs.sign ^ rhs.sign;
-			primitive exponent = lhs.exponent + rhs.exponent - B;
-			primitive product  = (lhs.real_mantissa() * rhs.real_mantissa()) >> M;
-
-			primitive overflow = (product >> M) > 1;
-
-			exponent += overflow;
-			if(exponent >= EXPONENT_MASK)
-				return inf(sign);
-
-			return from_components(sign, exponent, product >> overflow);
+			int exponent = (lhs.exponent - B) + (rhs.exponent - B);
+			return renormalize(
+				(lhs.real_mantissa() *
+				 rhs.real_mantissa()) >> M, exponent - M, lhs.sign ^ rhs.sign);
 		}
 
 		friend IEEE754 operator / (const IEEE754 &lhs, const IEEE754 &rhs) {
@@ -327,16 +334,10 @@ class IEEE754 {
 			if(rhs == 0)
 				return inf(lhs.sign ^ rhs.sign);
 
-			primitive sign = lhs.sign ^ rhs.sign;
-			primitive exponent = lhs.exponent - rhs.exponent + B;
-			primitive quotient = (lhs.real_mantissa() << M) / rhs.real_mantissa();
-
-			primitive underflow = (quotient >> M) < 1;
-			exponent -= underflow;
-			if(exponent >= EXPONENT_MASK)
-				return nan(sign);
-
-			return from_components(sign, exponent, quotient << underflow);
+			int exponent = (lhs.exponent - B) - (rhs.exponent - B);
+			return renormalize(
+				(lhs.real_mantissa() << M) /
+				 rhs.real_mantissa(), exponent - M, lhs.sign ^ rhs.sign);
 		}
 
 		// Placement
