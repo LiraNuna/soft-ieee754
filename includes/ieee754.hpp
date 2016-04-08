@@ -301,6 +301,16 @@ class IEEE754 {
 		friend IEEE754 operator + (const IEEE754 &lhs, const IEEE754 &rhs) {
 			if(std::isunordered(lhs, rhs))
 				return nan();
+			if(std::isinf(lhs) || std::isinf(rhs)) {
+				if(std::isinf(lhs) && !std::isinf(rhs))
+					return lhs;
+				if(std::isinf(rhs) && !std::isinf(lhs))
+					return rhs;
+				if(rhs == lhs)
+					return rhs;
+
+				return nan();
+			}
 
 			int exp = std::min(lhs.exponent - B, rhs.exponent - B) - M;
 			return renormalize(
@@ -311,6 +321,16 @@ class IEEE754 {
 		friend IEEE754 operator - (const IEEE754 &lhs, const IEEE754 &rhs) {
 			if(std::isunordered(lhs, rhs))
 				return nan();
+			if(std::isinf(lhs) || std::isinf(rhs)) {
+				if(std::isinf(lhs) && !std::isinf(rhs))
+					return lhs;
+				if(std::isinf(rhs) && !std::isinf(lhs))
+					return -rhs;
+				if(rhs != lhs)
+					return lhs;
+
+				return nan();
+			}
 
 			int exp = std::min(lhs.exponent - B, rhs.exponent - B) - M;
 			return renormalize(
